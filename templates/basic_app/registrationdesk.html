@@ -1,0 +1,27 @@
+{% extends "basic_app/base_adminpanel.html" %}
+{% load staticfiles %}
+{% block body_block %}
+
+{% if user.profile.cs == True and user.profile.cs_reg_status == True %}
+<div class="container" style="padding-top: 5%;">
+    <div class="jumbotron">
+            <div class="alert alert-success" role="alert">
+                <b> Registration Desk</b>
+            </div>
+        <form method="POST" action="{% url 'basic_app:registrationdesk' %}">
+              {% csrf_token %}
+              <div class="row">
+                <div class="col">
+                  <input type="text" class="form-control" placeholder="RegID" name="regid">
+                </div>
+                <div class="col">
+                      <button type="submit" class="btn btn-info">Search</button>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+        {% else %}
+        Sorry you are not authenticated to view this page !!!!:(
+        {% endif %}
+{% endblock %}

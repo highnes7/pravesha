@@ -1,0 +1,73 @@
+{% extends "basic_app/base_adminpanel.html" %}
+{% load staticfiles %}
+{% block body_block %}
+
+{% if user.profile.cs == True and user.profile.cs_reg_status == True %}
+<div class="container">
+    <div class="jumbotron">
+{% for i in searchlist %}
+
+<table class="table">
+        <thead>
+          <tr>
+            <th scope="col">RegID</th>
+            <th scope="col">Name</th>
+            <th scope="col">College</th>
+            <th scope="col">Dept</th>
+            <th scope="col">Year</th>
+            <th scope="col">Food Pref</th>
+            <th scope="col">Amount</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>{{i.username}}</td>
+            <td>{{i.first_name}} {{ i.last_name }}</td>
+            <td> {{i.profile.college}} </td>
+            <td> {{i.profile.dept}} </td>
+            <td> {{i.profile.Year}} </td>
+            <form action="{% url 'basic_app:paymentupdate' %}" method="POST">
+            <td> {% if i.profile.food_pref == 'ND'%} 
+                    <select name="fp">
+                        <option value="ND">ND</option>
+                        <option value="V">Veg</option>
+                        <option value="NV">NonVeg</option>
+                  </select>
+            {% else %}
+                  {{i.profile.food_pref}}
+                  <input type="hidden" value="{{i.profile.food_pref}}" name="fp">
+            {% endif %}      
+            </td>
+            <td>
+                    {% if i.profile.payment_stats == False %}
+                    {% if i.profile.pubg == True %}
+                        Amount : 250
+                    {% else %}
+                        Amount : 200
+                {% endif %}
+                    {% else %}
+                        Amount :0
+                {% endif %}
+            </td>
+          </tr>
+          <tr>
+        </tbody>
+      </table>
+      {% endfor %}
+
+{% for i in searchlist %}
+    {% csrf_token %}
+    <input type="hidden" name="no" value="{{i.profile.mob_no}}"> 
+    {% if i.profile.payment_stats == True%}   
+    <button type="submit" class="btn btn-success" disabled>Payment Received</button>
+    {% else %}
+    <button type="submit" class="btn btn-success">Payment Received</button>
+    {% endif %}
+</form>
+{% endfor %}
+</div>
+</div>
+{% else %}
+Sorry you are not authenticated to view this page !!!!:(
+{% endif %}
+{% endblock %}

@@ -1,0 +1,68 @@
+{% extends "basic_app/base_adminpanel.html" %}
+{% load staticfiles %}
+{% block body_block %}
+
+{% if user.profile.cs == True and user.profile.cs_th_status == True %}
+<div class="container">
+        <div class="alert alert-primary" role="alert" style="text-align: center">
+           <b> Treasure Hunt Coordinators Portal</b>
+        </div>   
+<div class="jumbotron">
+<table class="table">
+    <thead>
+      <tr>
+        <th scope="col">RegNo</th>
+        <th scope="col">Name</th>
+        <th scope="col">College</th>
+        <th scope="col">Dept</th>
+        <th scope="col">Year</th>
+        <th scope="col">Payment</th>
+  
+      </tr>
+    </thead>
+    <tbody>
+    {% for i in participants_list %}
+    {% if i.profile.status_th == 'P' %}
+      <tr>
+        <td>{{i.username}}</td>
+        <td>{{i.first_name}} {{i.last_name}}</td>
+        <td>{{i.profile.college}}</td>
+        <td>{{i.profile.dept}}</td>
+        <td>{{i.profile.Year}}</td>
+        <td>{% if i.profile.payment_stats == True %}
+            Paid
+            {% else %}
+            Pending
+            {% endif %}
+        </td>
+      </tr>
+      {% endif %}
+      {% endfor %}
+  </table>
+<div class="container">
+  <form method="POST" action="{% url 'basic_app:cs_th' %}">
+        {% csrf_token %}
+        <div class="row">
+          <div class="col">
+            <input type="text" class="form-control" placeholder="RegID" name="regid">
+          </div>
+          <div class="col">
+                <button type="submit" class="btn btn-info">Add Participant</button>
+          </div>
+        </div>
+      </form>
+    </div>
+ 
+<footer style="padding: 5%;">
+    <a style="color: red;" href="{% url 'basic_app:th_winners' %}">
+            <div class="alert alert-danger" role="alert" style="text-align: center;">
+                    Declare Winners and Close Event
+            </div></a>
+</footer>
+</div>
+</div> 
+{% else %}
+Sorry you are not authenticated to view this page !!!!:(
+{% endif %}
+
+{% endblock %}
